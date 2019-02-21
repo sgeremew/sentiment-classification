@@ -34,7 +34,7 @@ print("\n\n\n----------------------------\tHW 1\t----------------------------|")
 print("\nSamuel Geremew\nCS484\n\n")
 
 
-# Example 1: only examining the first 10 reviews
+# Examining the first few reviews
 reviews_training_data = []
 reviews_test_data = []
 training_scores = []
@@ -46,6 +46,7 @@ training_scores = []
 train_data_file = open('train-data-20.dat','r')
 test_data_file = open('test-data-20.dat','r')
 
+# only two records
 for i in range(0,2):
 	reviews_training_data.append(train_data_file.readline().strip())
 for i in range(0,2):
@@ -109,15 +110,17 @@ reviews_test_data = preprocess_reviews(reviews_test_data)
 #	2.)
 #	3.)
 #	Remove stop words and then we'll do some stemming
-cv = StemmedCountVectorizer(binary=True, stop_words = 'english')
+scvectorizer = StemmedCountVectorizer(stop_words = 'english')
 #cv = CountVectorizer(binary=True, stop_words = 'english')
-cv.fit(reviews_training_data) # learns vocab of training set
+scvectorizer.fit(reviews_training_data) # learns vocab of training set
+
+
 
 # sparse matrix X and X_test
-train_sparse = cv.transform(reviews_training_data) 
-test_sparse = cv.transform(reviews_test_data)
+train_sparse = scvectorizer.transform(reviews_training_data) 
+test_sparse = scvectorizer.transform(reviews_test_data)
 
-names = cv.get_feature_names()
+names = scvectorizer.get_feature_names()
 #print(reviews_training_data)
 print("Here are the vocabulary terms \"aka the dimensions\"\n")
 print(names)
