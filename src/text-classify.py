@@ -37,12 +37,28 @@ import random
 print("\n\n\n----------------------------\tHW 1\t----------------------------|")
 print("\nSamuel Geremew\nCS484\n\n")
 
-
+#
+#
+#	Preprocessing
+#
+#	1.) Remove special characters and punctuations
+#	2.) Stemming: reduce the words to their roots
+#	3.) Remove stop words: words with little meaning when tokenized
 
 def delete_stop_words(document):
 	pass
+
+# Replace special characters that are not needed with a space or just remove 
+# them. Reomve some insignificant words, such as words less than 4 letters long.
+# Reference: https://docs.python.org/3/library/re.html
 def delete_meaningless_characters(document):
-	pass
+
+	review = re.sub('[^a-zA-Z\n\.]', ' ', document).replace(".", "")
+	review = ' '.join(review.split())
+	review = "".join(review.splitlines())
+	review = re.sub(r'\b\w{1,3}\b', '', review)
+	review.strip()
+	return review
 
 def process_training_document(file):
 	pass
@@ -58,7 +74,7 @@ def get_predicted_label(neighbors):
 def main():
 	pass
 
-
+# print(delete_meaningless_characters("Hello, I'm, good , !"))
 
 # # Examining the first few reviews
 # reviews_training_data = []
@@ -114,34 +130,11 @@ def main():
 #         analyzer = super(StemmedCountVectorizer, self).build_analyzer()
 #         return lambda doc: ([stemmer.stem(w) for w in analyzer(doc)])
 
-# # Replace special characters that are not needed with a space or just remove 
-# # them
-# REMOVE = re.compile("(\.)|(\;)|(\:)|(\!)|(\')|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])")
-# SPACES = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)|(\t)")
-
-# # function for character replacement and elimination
-# def preprocess_reviews(reviews):
-
-#     reviews = [REMOVE.sub("", line.lower()) for line in reviews]
-#     reviews = [SPACES.sub(" ", line) for line in reviews]
- 
-#     return reviews
-
-
-# #	1.) Remove special characters and punctuations
-# #
-# reviews_training_data = preprocess_reviews(reviews_training_data)
-# reviews_test_data = preprocess_reviews(reviews_test_data)
-
-
 # #	2.) Stemming
 # #	3.) Remove stop words
 # #
 # #	Remove stop words and then we'll do some stemming
 # scvectorizer = StemmedCountVectorizer(stop_words = 'english')
-
-
-
 
 # #
 # # learns vocab of training set
