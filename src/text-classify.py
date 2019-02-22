@@ -9,10 +9,14 @@
 import re
 import nltk
 import numpy as np
+from scipy.spatial import distance
 from nltk.stem import *
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
+import operator
+import itertools
+import random
 
 
 #------------------------------------------------------------------------------
@@ -34,113 +38,150 @@ print("\n\n\n----------------------------\tHW 1\t----------------------------|")
 print("\nSamuel Geremew\nCS484\n\n")
 
 
-# Examining the first few reviews
-reviews_training_data = []
-reviews_test_data = []
-training_scores = []
 
-#
-# Creating two array's where each element is a one line review
-#
+def delete_stop_words(document):
+	pass
+def delete_meaningless_characters(document):
+	pass
 
-train_data_file = open('train-data-20.dat','r')
-test_data_file = open('test-data-20.dat','r')
+def process_training_document(file):
+	pass
+def process_test_document(file):
+	pass
 
-# only two records
-for i in range(0,2):
-	reviews_training_data.append(train_data_file.readline().strip())
-for i in range(0,2):
-	reviews_test_data.append(test_data_file.readline().strip())
-
-# for line in train_data_file:
-# 	reviews_training_data.append(line.strip())
-# for line in test_data_file:
-# 	reviews_test_data.append(line.strip())
-
-train_data_file.close()
-test_data_file.close()
-
-#
-# close the files, all data are now stored in the arrays
-#
+def cosine_similarity(v1,v2):
+	pass
+def k_nearest_neighbor(unknown,known,k):
+	pass
+def get_predicted_label(neighbors):
+	pass
+def main():
+	pass
 
 
 
-for review in reviews_training_data:
-	training_scores.append(review[:2])
-print("Here are the true scores in an array\n")
-print(training_scores)
-print("\n")
+# # Examining the first few reviews
+# reviews_training_data = []
+# reviews_test_data = []
+# training_scores = []
+
+# #
+# # Creating two array's where each element is a one line review
+# #
+
+# train_data_file = open('train-data-20.dat','r')
+# test_data_file = open('test-data-20.dat','r')
+
+# # only two records
+# for i in range(0,2):
+# 	reviews_training_data.append(train_data_file.readline().strip())
+# for i in range(0,2):
+# 	reviews_test_data.append(test_data_file.readline().strip())
+
+# # for line in train_data_file:
+# # 	reviews_training_data.append(line.strip())
+# # for line in test_data_file:
+# # 	reviews_test_data.append(line.strip())
+
+# train_data_file.close()
+# test_data_file.close()
+
+# #
+# # close the files, all data are now stored in the arrays
+# #
 
 
-#
-#
-#	Preprocessing
-#
-#	1.) Remove special characters and punctuations
-#	2.) Stemming: reduce the words to their roots
-#	3.) Remove stop words: words with little meaning when tokenized
 
-# Creating a stemmed version of our document vectorizer
-stemmer = PorterStemmer()
-class StemmedCountVectorizer(CountVectorizer):
-    def build_analyzer(self):
-        analyzer = super(StemmedCountVectorizer, self).build_analyzer()
-        return lambda doc: ([stemmer.stem(w) for w in analyzer(doc)])
+# for review in reviews_training_data:
+# 	training_scores.append(review[:2])
+# print("Here are the true scores in an array\n")
+# print(training_scores)
+# print("\n")
 
-# Replace special characters that are not needed with a space or just remove 
-# them
-REMOVE = re.compile("(\.)|(\;)|(\:)|(\!)|(\')|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])")
-SPACES = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)|(\t)")
 
-# function for character replacement and elimination
-def preprocess_reviews(reviews):
+# #
+# #
+# #	Preprocessing
+# #
+# #	1.) Remove special characters and punctuations
+# #	2.) Stemming: reduce the words to their roots
+# #	3.) Remove stop words: words with little meaning when tokenized
 
-    reviews = [REMOVE.sub("", line.lower()) for line in reviews]
-    reviews = [SPACES.sub(" ", line) for line in reviews]
+# # Creating a stemmed version of our document vectorizer
+# stemmer = PorterStemmer()
+# class StemmedCountVectorizer(CountVectorizer):
+#     def build_analyzer(self):
+#         analyzer = super(StemmedCountVectorizer, self).build_analyzer()
+#         return lambda doc: ([stemmer.stem(w) for w in analyzer(doc)])
+
+# # Replace special characters that are not needed with a space or just remove 
+# # them
+# REMOVE = re.compile("(\.)|(\;)|(\:)|(\!)|(\')|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])")
+# SPACES = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)|(\t)")
+
+# # function for character replacement and elimination
+# def preprocess_reviews(reviews):
+
+#     reviews = [REMOVE.sub("", line.lower()) for line in reviews]
+#     reviews = [SPACES.sub(" ", line) for line in reviews]
  
-    return reviews
+#     return reviews
 
 
-#	1.) Remove special characters and punctuations
-#
-reviews_training_data = preprocess_reviews(reviews_training_data)
-reviews_test_data = preprocess_reviews(reviews_test_data)
+# #	1.) Remove special characters and punctuations
+# #
+# reviews_training_data = preprocess_reviews(reviews_training_data)
+# reviews_test_data = preprocess_reviews(reviews_test_data)
 
 
-#	2.) Stemming
-#	3.) Remove stop words
-#
-#	Remove stop words and then we'll do some stemming
-scvectorizer = StemmedCountVectorizer(stop_words = 'english')
+# #	2.) Stemming
+# #	3.) Remove stop words
+# #
+# #	Remove stop words and then we'll do some stemming
+# scvectorizer = StemmedCountVectorizer(stop_words = 'english')
 
 
 
 
-#
-# learns vocab of training set
-#
-scvectorizer.fit(reviews_training_data)
+# #
+# # learns vocab of training set
+# #
+# scvectorizer.fit(reviews_training_data)
 
 
-#
-# transforms the document word vectors into sparse document matrices
-#
-train_sparse = scvectorizer.transform(reviews_training_data) 
-test_sparse = scvectorizer.transform(reviews_test_data)
+# #
+# # transforms the document word vectors into sparse document matrices
+# #
+# train_sparse = scvectorizer.transform(reviews_training_data) 
+# test_sparse = scvectorizer.transform(reviews_test_data)
 
-names = scvectorizer.get_feature_names()
-print("Here are the vocabulary terms \"aka the dimensions\"\n")
-print(names)
-print("\nHere is the sparse matrix printed in an array format\n")
-print(train_sparse.toarray())
+# names = scvectorizer.get_feature_names()
+# print("Here are the vocabulary terms \"aka the dimensions\"\n")
+# print(names)
+# print("\nHere is the sparse matrix printed in an array format\n")
+# print(train_sparse.toarray())
 
 
-#
-# Transform both train and test data to array's
-#
-train_array = train_sparse.toarray()
-test_array = test_sparse.toarray()
+# #
+# # Distance measurement for document vectors
+# #
+# #def dist():
+
+# # a = distance.euclidean([0,0,0,0],[1,2,3,4])
+# # print("\n\n",a)
+
+
+
+# #
+# # Transform both train and test data to array's
+# #
+# train_array = train_sparse.toarray()
+# test_array = test_sparse.toarray()
+
+# # print("\n\n")
+# # print(train_array,"\n")
+# # print(test_array,"\n")
+
 
 
 
