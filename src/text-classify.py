@@ -88,14 +88,12 @@ class StemmedCountVectorizer(CountVectorizer):
         analyzer = super(StemmedCountVectorizer, self).build_analyzer()
         return lambda doc: ([stemmer.stem(w) for w in analyzer(doc)])
 
-
-#	1.)
-#	Replace special characters that are not needed
+# Replace special characters that are not needed with a space or just remove 
+# them
 REMOVE = re.compile("(\.)|(\;)|(\:)|(\!)|(\')|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])")
 SPACES = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)|(\t)")
 
-
-#	function for character replacement and elimination
+# function for character replacement and elimination
 def preprocess_reviews(reviews):
 
     reviews = [REMOVE.sub("", line.lower()) for line in reviews]
@@ -103,29 +101,47 @@ def preprocess_reviews(reviews):
  
     return reviews
 
+
+#	1.) Remove special characters and punctuations
+#
 reviews_training_data = preprocess_reviews(reviews_training_data)
 reviews_test_data = preprocess_reviews(reviews_test_data)
 
 
-#	2.)
-#	3.)
+#	2.) Stemming
+#	3.) Remove stop words
+#
 #	Remove stop words and then we'll do some stemming
 scvectorizer = StemmedCountVectorizer(stop_words = 'english')
-#cv = CountVectorizer(binary=True, stop_words = 'english')
-scvectorizer.fit(reviews_training_data) # learns vocab of training set
 
 
 
-# sparse matrix X and X_test
+
+#
+# learns vocab of training set
+#
+scvectorizer.fit(reviews_training_data)
+
+
+#
+# transforms the document word vectors into sparse document matrices
+#
 train_sparse = scvectorizer.transform(reviews_training_data) 
 test_sparse = scvectorizer.transform(reviews_test_data)
 
 names = scvectorizer.get_feature_names()
-#print(reviews_training_data)
 print("Here are the vocabulary terms \"aka the dimensions\"\n")
 print(names)
 print("\nHere is the sparse matrix printed in an array format\n")
 print(train_sparse.toarray())
+
+
+#
+# Transform both train and test data to array's
+#
+train_array = train_sparse.toarray()
+test_array = test_sparse.toarray()
+
 
 
 
