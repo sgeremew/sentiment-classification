@@ -11,6 +11,8 @@ import nltk
 import numpy as np
 from scipy.spatial import distance
 from nltk.stem import *
+from nltk.corpus import stopwords
+# nltk.download('stopwords')
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -45,6 +47,7 @@ print("\nSamuel Geremew\nCS484\n\n")
 #	2.) Stemming: reduce the words to their roots
 #	3.) Remove stop words: words with little meaning when tokenized
 
+stop_words = set(stopwords.words('english'))
 def delete_stop_words(document):
 	pass
 
