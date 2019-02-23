@@ -46,7 +46,17 @@ print("\nSamuel Geremew\nCS484\n\n")
 #	2.) Stemming: reduce the words to their roots
 #	3.) Remove stop words: words with little meaning when tokenized
 
+
+# We assign a list of English stop words to the variable stop_words. The 
+# function stopwords.words('english') is from nltk.corpus and the list contains 
+# roughly 150 stop words.
 stop_words = set(stopwords.words('english'))
+# join() takes an iterable object (e.g. list, string, tuple, etc) and concatenates 
+# the items with the str string (str.join(iterable)) and returns a string.
+#
+# document.lower().split() takes the document (a string) and splits it into 
+# separate words changes them to lower case and allows join() to iterate through 
+# in order to concatnate after removing stop words.
 def delete_stop_words(document):
 	review = ' '.join([word for word in document.lower().split() if word not in stop_words])
 	return review
@@ -62,16 +72,19 @@ def delete_meaningless_characters(document):
 	review.strip()
 	return review
 
-def process_training_document(file):
+# Function will take in a file, apply filters to each document, store key and 
+# values in a dict, and also vecotrize each document and train the scikit vector 
+# vocabulary using fit and transform functions.
+def process_training_file(file):
 	pass
-def process_test_document(file):
+def process_test_file(file):
 	pass
 
 def cosine_similarity(v1,v2):
 	pass
 def k_nearest_neighbor(unknown,known,k):
 	pass
-def get_predicted_label(neighbors):
+def get_class_label(neighbors):
 	pass
 def main():
 	pass
