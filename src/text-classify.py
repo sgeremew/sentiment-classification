@@ -12,7 +12,6 @@ import numpy as np
 from scipy.spatial import distance
 from nltk.stem import *
 from nltk.corpus import stopwords
-# nltk.download('stopwords')
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -49,13 +48,13 @@ print("\nSamuel Geremew\nCS484\n\n")
 
 stop_words = set(stopwords.words('english'))
 def delete_stop_words(document):
-	pass
+	review = ' '.join([word for word in document.lower().split() if word not in stop_words])
+	return review
 
 # Replace special characters that are not needed with a space or just remove 
 # them. Reomve some insignificant words, such as words less than 4 letters long.
 # Reference: https://docs.python.org/3/library/re.html
 def delete_meaningless_characters(document):
-
 	review = re.sub('[^a-zA-Z\n\.]', ' ', document).replace(".", "")
 	review = ' '.join(review.split())
 	review = "".join(review.splitlines())
@@ -77,7 +76,10 @@ def get_predicted_label(neighbors):
 def main():
 	pass
 
-# print(delete_meaningless_characters("Hello, I'm, good , !"))
+x = "Hello, I'm, good , !, that's why you don't do that chicken nugget?"
+new_x = delete_meaningless_characters(x)
+print(new_x)
+print(delete_stop_words(new_x))
 
 # # Examining the first few reviews
 # reviews_training_data = []
