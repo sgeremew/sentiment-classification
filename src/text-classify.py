@@ -94,13 +94,18 @@ def process_training_file(file):
 	index = 0
 	try:
 		for document in data_file:
+			# fix this to work with numpy array!
 			temp = [document[:2], document[3:].strip(" ")]
 			data.append(temp)
 			document_IDs[index] = document[:2]
 			index += 1
 	finally:
 		data_file.close()
-	# print(data)
+
+	data_arr = np.array(data, dtype=str)
+	# fix this to work with numpy array!
+	data_arr = np.apply_along_axis(delete_stop_words,0,data_arr[1])
+	print(data_arr)
 	return index
 
 def process_test_file(file):
@@ -121,7 +126,7 @@ print(new_x)
 print(delete_stop_words(new_x))
 
 print()
-print(process_training_file('train-data-20.dat'))
+print(process_training_file('testThis.dat'))
 print(document_IDs)
 
 # # Examining the first few reviews
