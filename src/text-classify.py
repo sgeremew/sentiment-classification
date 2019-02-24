@@ -9,6 +9,7 @@
 import re
 import nltk
 import numpy as np
+import pandas as pd
 from scipy.spatial import distance
 from nltk.stem import *
 from nltk.corpus import stopwords
@@ -54,6 +55,8 @@ stop_words = set(stopwords.words('english'))
 # We will store document
 document_IDs = {}
 
+col = ['class','doc']
+
 # join() takes an iterable object (e.g. list, string, tuple, etc) and concatenates 
 # the items with the str string (str.join(iterable)) and returns a string.
 #
@@ -64,7 +67,9 @@ document_IDs = {}
 # Parameter(s): document - a string, a document is one movie review from the file
 # Return: review - a string, the same string with all the stop words removed
 def delete_stop_words(document):
+	document = str(document)
 	review = ' '.join([word for word in document.lower().split() if word not in stop_words])
+	# print(review)
 	return review
 
 # Replace special characters that are not needed with a space or just remove 
@@ -74,12 +79,26 @@ def delete_stop_words(document):
 # Parameter(s): document - a string
 # Return: review - a string, this time we have removed and special characters
 def delete_meaningless_characters(document):
+	document = str(document)
+	# print(document)
 	review = re.sub('[^a-zA-Z\n\.]', ' ', document).replace(".", "")
+	# print(review)
 	review = ' '.join(review.split())
+	# print(review)
 	review = "".join(review.splitlines())
+	# print(review)
 	review = re.sub(r'\b\w{1,3}\b', '', review)
+	# print(review)
 	review.strip()
+	# print(review)
 	return review
+
+# Creating a stemmed version of our document vectorizer
+stemmer = PorterStemmer()
+class StemmedCountVectorizer(CountVectorizer):
+    def build_analyzer(self):
+        analyzer = super(StemmedCountVectorizer, self).build_analyzer()
+        return lambda doc: ([stemmer.stem(w) for w in analyzer(doc)])
 
 # Function will take in a file, apply filters to each document, store key and 
 # values in a dict, and also vecotrize each document and train the scikit vector 
@@ -95,21 +114,50 @@ def process_training_file(file):
 	try:
 		for document in data_file:
 			# fix this to work with numpy array!
-			temp = [document[:2], document[3:].strip(" ")]
+			temp = [document[:2],document[3:].strip(" ")]
 			data.append(temp)
 			document_IDs[index] = document[:2]
 			index += 1
 	finally:
 		data_file.close()
 
-	data_arr = np.array(data, dtype=str)
-	# fix this to work with numpy array!
-	data_arr = np.apply_along_axis(delete_stop_words,0,data_arr[1])
-	print(data_arr)
-	return index
+	data_frame = pd.DataFrame(data,columns=col)
+	data_frame['doc'] = data_frame['doc'].apply(lambda x: delete_stop_words(x))
+	data_frame['doc'] = \
+	data_frame['doc'].apply(lambda x: delete_meaningless_characters(x))
+
+
+	vector = StemmedCountVectorizer()
+	X = vector.fit_transform(data_frame['doc'].values)
+	transformer = TfidfTransformer(smooth_idf=False)
+	tfidf = transformer.fit_transform(X)
+
+	return tfidf
 
 def process_test_file(file):
-	pass
+	data = []
+	data_file = open(file,'r')
+
+	try:
+		for document in data_file:
+			# fix this to work with numpy array!
+			temp = lines.strip(" ")
+			data.append(temp)
+	finally:
+		data_file.close()
+
+	data_frame = pd.DataFrame(data,columns=['doc'])
+	data_frame['doc'] = data_frame['doc'].apply(lambda x: delete_stop_words(x))
+	data_frame['doc'] = \
+	data_frame['doc'].apply(lambda x: delete_meaningless_characters(x))
+
+
+	vector = StemmedCountVectorizer()
+	X = vector.fit_transform(data_frame['doc'].values)
+	transformer = TfidfTransformer(smooth_idf=False)
+	tfidf = transformer.fit_transform(X)
+
+	return tfidf
 
 def cosine_similarity(v1,v2):
 	pass
@@ -121,9 +169,19 @@ def main():
 	pass
 
 x = "Hello, I'm, good , !, that's why you don't do that chicken nugget?"
-new_x = delete_meaningless_characters(x)
-print(new_x)
-print(delete_stop_words(new_x))
+
+# print("TESTING\n")
+# print(x)
+# print("------------")
+# x = delete_meaningless_characters(x)
+# print(x)
+# print("------------")
+# print(delete_stop_words(x))
+# print("------------\n\n\n")
+
+# new_x = delete_meaningless_characters(x)
+# print(new_x)
+# print(delete_stop_words(new_x))
 
 print()
 print(process_training_file('testThis.dat'))
