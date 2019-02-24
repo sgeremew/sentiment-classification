@@ -162,11 +162,31 @@ def process_test_file(file):
 def cosine_similarity(v1,v2):
 	distance = 1- spatial.distance.cosine(v1,v2)
 	return distance
-	
+
 def k_nearest_neighbor(unknown,known,k):
-	pass
+
+
+	
 def get_class_label(neighbors):
-	pass
+	good = 0
+    bad = 0
+    dict = {key: value for key, value in neighbors}
+    for key in dict:
+        if document_IDs[k] == '+1':
+            good += 1
+        else:
+            bad += 1
+
+    label = None
+    if (good == bad):
+        label = random.sample(set([-1, 1], 1))
+    else:
+    	if good > bad:
+    		label = '+1' 
+    	else:
+    		label = '-1'
+    return label
+
 def main():
 	pass
 
