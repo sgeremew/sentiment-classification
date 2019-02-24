@@ -57,6 +57,9 @@ stop_words = set(stopwords.words('english'))
 # document.lower().split() takes the document (a string) and splits it into 
 # separate words changes them to lower case and allows join() to iterate through 
 # in order to concatnate after removing stop words.
+#
+# Parameter(s): document - a string, a document is one movie review from the file
+# Return: review - a string, the same string with all the stop words removed
 def delete_stop_words(document):
 	review = ' '.join([word for word in document.lower().split() if word not in stop_words])
 	return review
@@ -64,6 +67,9 @@ def delete_stop_words(document):
 # Replace special characters that are not needed with a space or just remove 
 # them. Reomve some insignificant words, such as words less than 4 letters long.
 # Reference: https://docs.python.org/3/library/re.html
+#
+# Parameter(s): document - a string
+# Return: review - a string, this time we have removed and special characters
 def delete_meaningless_characters(document):
 	review = re.sub('[^a-zA-Z\n\.]', ' ', document).replace(".", "")
 	review = ' '.join(review.split())
@@ -75,6 +81,9 @@ def delete_meaningless_characters(document):
 # Function will take in a file, apply filters to each document, store key and 
 # values in a dict, and also vecotrize each document and train the scikit vector 
 # vocabulary using fit and transform functions.
+#
+# Parameters(s): file - the training file that we will model our algo. after
+# Return: 
 def process_training_file(file):
 	pass
 def process_test_file(file):
