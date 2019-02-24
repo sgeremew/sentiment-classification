@@ -51,6 +51,9 @@ print("\nSamuel Geremew\nCS484\n\n")
 # function stopwords.words('english') is from nltk.corpus and the list contains 
 # roughly 150 stop words.
 stop_words = set(stopwords.words('english'))
+# We will store document
+document_IDs = {}
+
 # join() takes an iterable object (e.g. list, string, tuple, etc) and concatenates 
 # the items with the str string (str.join(iterable)) and returns a string.
 #
@@ -85,7 +88,21 @@ def delete_meaningless_characters(document):
 # Parameters(s): file - the training file that we will model our algo. after
 # Return: 
 def process_training_file(file):
-	pass
+	data = []
+	data_file = open(file,'r')
+
+	index = 0
+	try:
+		for document in data_file:
+			temp = [document[:2], document[3:].strip(" ")]
+			data.append(temp)
+			document_IDs[index] = document[:2]
+			index += 1
+	finally:
+		data_file.close()
+	# print(data)
+	return index
+
 def process_test_file(file):
 	pass
 
@@ -102,6 +119,10 @@ x = "Hello, I'm, good , !, that's why you don't do that chicken nugget?"
 new_x = delete_meaningless_characters(x)
 print(new_x)
 print(delete_stop_words(new_x))
+
+print()
+print(process_training_file('train-data-20.dat'))
+print(document_IDs)
 
 # # Examining the first few reviews
 # reviews_training_data = []
