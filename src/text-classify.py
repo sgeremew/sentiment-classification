@@ -160,7 +160,9 @@ def process_test_file(file):
 	return tfidf
 
 def cosine_similarity(v1,v2):
-	pass
+	distance = 1- spatial.distance.cosine(v1,v2)
+	return distance
+	
 def k_nearest_neighbor(unknown,known,k):
 	pass
 def get_class_label(neighbors):
